@@ -1,0 +1,82 @@
+model:
+  target: feaslt.model.FEA_SLT
+  params:
+    lr: 6.0e-4
+    monitor: val/bleu4
+    validation_start_epoch: 0
+    model_name: google/flan-t5-xl
+    model_dtype: bfloat16
+    cache_dir: ${oc.env:MODEL_CACHE,./models}
+    inter_hidden: 1024
+    input_size: 2048
+    expression_size: 768
+    beam_size: 5
+    max_frame_len: 512
+    max_txt_len: 64
+    frame_sample_rate: 1
+    expression_sample_rate: 8
+    expression_extraction_method: single
+    prompt: "Translate the given sentence into {}."
+    tuning_type: lora
+    lora_r: 16
+    lora_alpha: 32
+    lora_dropout: 0.1
+    fusion_mode: joint
+    warm_up_steps: 0
+    cross_modal_align: true
+    combined_loss: true
+    alpha: 1.0
+    use_in_context: true
+    num_in_context: 3
+    context_anno_path: ${oc.env:ANNO_ROOT,./preprocess/Phoenix14T}/train_ml.npy
+    context_seed: 0
+    use_expression_aware_fusion: true
+    use_label_smoothing: true
+    label_smoothing: 0.1
+
+lightning:
+  callback:
+    learning_rate_logger:
+      target: pytorch_lightning.callbacks.LearningRateMonitor
+      params:
+        logging_interval: step
+  trainer:
+    accumulate_grad_batches: 2
+    accelerator: gpu
+    devices: 1
+    max_epochs: 500
+    gradient_clip_val: 1.0
+    check_val_every_n_epoch: 1
+    precision: bf16
+
+data:
+  target: dataset.datamodule.DataModuleFromConfig
+  params:
+    batch_size: 8
+    num_workers: 4
+    train:
+      target: dataset.p14t.Phoenix14T
+      params: &features
+        anno_root: ${oc.env:ANNO_ROOT,./preprocess/Phoenix14T}
+        vid_root: ${oc.env:VIDEO_ROOT,./data/Phoenix14T}
+        feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/spatial_feat_Phoenix14T
+        mae_feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/motion_feat_Phoenix14T
+        exp_feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/expression_feat_Phoenix14T
+        mode: train
+        spatial: true
+        spatiotemporal: true
+        expression: true
+        spatial_postfix: _s2wrapping
+        spatiotemporal_postfix: _overlap-8
+        expression_postfix: ${oc.env:EXPRESSION_POSTFIX,_stride-8}
+        expression_sample_rate: 8
+    validation:
+      target: dataset.p14t.Phoenix14T
+      params:
+        <<: *features
+        mode: dev
+    test:
+      target: dataset.p14t.Phoenix14T
+      params:
+        <<: *features
+        mode: test

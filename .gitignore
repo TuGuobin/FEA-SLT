@@ -1,0 +1,40 @@
+# Local environments, credentials and caches
+.env
+.env.*
+.venv/
+venv/
+.tmp-*/
+__pycache__/
+*.py[cod]
+.cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# Datasets, derived labels/features and downloaded weights are never published
+data/
+data2/
+datasets/
+preprocess/
+extracted_features/
+face_detection_results/
+models/
+pretrained_weight/
+*.npy
+*.npz
+*.pkl
+*.pt
+*.pth
+*.ckpt
+*.mp4
+*.tar.gz
+*.zip
+
+# Training and evaluation artifacts
+logs/
+*.log
+results/
+final_results/
+visualizations/
+experiment/
+bleurt/
+BLEURT-20/
