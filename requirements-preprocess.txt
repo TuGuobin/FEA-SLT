@@ -1,0 +1,7 @@
+# Optional face detection, in addition to requirements.txt.
+# Target: Linux / Python 3.10. TensorFlow is used only by utils.crop_faces.
+deepface==0.0.93
+tensorflow==2.15.1
+tf-keras==2.15.1
+keras==2.15.0
+opencv-python==4.10.0.84

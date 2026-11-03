@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use FEA-SLT, please cite our EMNLP 2026 paper."
+type: software
+title: "FEA-SLT"
+authors:
+  - family-names: Tu
+    given-names: Guobin
+    email: "tuguobin@zju.edu.cn"
+  - family-names: Weng
+    given-names: Di
+preferred-citation:
+  type: conference-paper
+  title: "FEA-SLT: A Gloss-Free End-to-End Framework for Facial-Expression-Aware Sign Language Translation"
+  authors:
+    - family-names: Tu
+      given-names: Guobin
+      email: "tuguobin@zju.edu.cn"
+    - family-names: Weng
+      given-names: Di
+  year: 2026
+  collection-title: "Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing"
+  start: 45546
+  end: 45570
+  doi: "10.18653/2026.emnlp-main.1999"
+  url: "https://aclanthology.org/2026.emnlp-main.1999/"

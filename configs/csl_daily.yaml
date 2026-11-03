@@ -1,0 +1,33 @@
+# Merge after configs/train.yaml for the CSL-Daily paper setting.
+model:
+  params:
+    model_name: google/mt5-xl
+    lr: 1.0e-4
+    context_anno_path: ${oc.env:ANNO_ROOT,./preprocess/CSL-Daily}/train_ml.npy
+
+lightning:
+  trainer:
+    max_epochs: 200
+
+data:
+  params:
+    batch_size: 4
+    train:
+      target: dataset.csl_daily.CSLDaily
+      params: &features
+        anno_root: ${oc.env:ANNO_ROOT,./preprocess/CSL-Daily}
+        vid_root: ${oc.env:VIDEO_ROOT,./data/CSL-Daily}
+        feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/spatial_feat_CSL-Daily
+        mae_feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/motion_feat_CSL-Daily
+        exp_feat_root: ${oc.env:FEATURE_ROOT,./extracted_features}/expression_feat_CSL-Daily
+        mode: train
+    validation:
+      target: dataset.csl_daily.CSLDaily
+      params:
+        <<: *features
+        mode: dev
+    test:
+      target: dataset.csl_daily.CSLDaily
+      params:
+        <<: *features
+        mode: test
